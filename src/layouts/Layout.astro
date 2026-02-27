@@ -1,23 +1,45 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{title} | F1 2026 Official Guide</title>
+		<ClientRouter />
 	</head>
-	<body>
+	<body class="bg-[#0b0b0f] text-white font-f1 antialiased selection:bg-f1-red selection:text-white">
 		<slot />
 	</body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
+<style is:global>
+	@font-face {
+		font-family: 'Formula1';
+		src: url('/fonts/Formula1-Bold.woff2') format('woff2');
+		font-weight: bold;
+		font-style: normal;
+		font-display: swap;
 	}
+	@font-face {
+		font-family: 'Formula1';
+		src: url('/fonts/Formula1-Regular.woff2') format('woff2');
+		font-weight: normal;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	/* Estilos de scrollbar Racing */
+	::-webkit-scrollbar { width: 6px; }
+	::-webkit-scrollbar-track { background: #15151e; }
+	::-webkit-scrollbar-thumb { background: #e10600; border-radius: 10px; }
 </style>
