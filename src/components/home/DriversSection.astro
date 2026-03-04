@@ -1,0 +1,65 @@
+---
+import { DRIVERS, TEAMS } from "../../data/data";
+import Title from "../Title.astro";
+
+// Lógica de filtrado: 
+// 1. [...DRIVERS] crea una copia para no alterar el array original.
+// 2. .sort() ordena de forma descendente (b.wins - a.wins).
+// 3. .slice(0, 3) toma los 3 primeros tras el ordenado.
+const featured = [...DRIVERS]
+    .sort((a, b) => b.wins - a.wins)
+    .slice(0, 3);
+---
+<section id="drivers" class="py-32 px-6 max-w-[1400px] mx-auto">
+    <Title title="Top drivers" />
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {featured.map(d => (
+            <div class="group relative bg-white/5 p-8 rounded-2xl border-b-4 transition-all hover:bg-white/10 overflow-hidden" 
+                 style={`border-color: ${TEAMS[d.teamId].baseColor}`}>
+                
+                {d.titles > 0 && (
+                    <div class="absolute top-4 left-4 z-30 bg-yellow-500 text-black px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter flex items-center gap-1">
+                        <span>🏆</span> {d.titles} {d.titles === 1 ? 'Title' : 'Titles'}
+                    </div>
+                )}
+
+                <span class="text-7xl font-black opacity-10 absolute top-4 right-6 italic group-hover:scale-110 transition-transform">
+                    {d.number}
+                </span>
+
+                <div class="relative h-64 mb-6 flex items-center justify-center">
+                    <img 
+                        src={`/pilots/${d.id}.png`} 
+                        alt={d.name}
+                        class="h-full object-contain z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div class="absolute inset-0 rounded-full blur-3xl opacity-20 scale-75" style={`background-color: ${TEAMS[d.teamId].baseColor}`}></div>
+                </div>
+
+                <div class="relative z-20">
+                    <p class="text-f1-red font-bold text-xs uppercase tracking-widest">{TEAMS[d.teamId].name}</p>
+                    <h3 class="text-3xl font-black italic uppercase mb-4">{d.name}</h3>
+
+                    <div class="grid grid-cols-4 gap-2 border-t border-white/10 pt-4">
+                        <div class="text-center">
+                            <p class="text-[9px] uppercase opacity-50">Titles</p>
+                            <p class="text-lg font-bold text-yellow-500">{d.titles}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[9px] uppercase opacity-50">Wins</p>
+                            <p class="text-lg font-bold">{d.wins}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[9px] uppercase opacity-50">Podiums</p>
+                            <p class="text-lg font-bold">{d.podiums}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-[9px] uppercase opacity-50">Entries</p>
+                            <p class="text-lg font-bold">{d.entries}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ))}
+    </div>
+</section>

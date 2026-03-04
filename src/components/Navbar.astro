@@ -1,51 +1,128 @@
 ---
-// Navbar.astro
+const navLinks = [
+  { name: 'Calendario', href: '/calendario' },
+  { name: 'Pilotos', href: '/pilotos' },
+  { name: 'Escuderías', href: '/escuderias' },
+  { name: 'Resultados', href: '/resultados' },
+];
 ---
-<div class="relative w-full h-full flex items-center justify-end"> <input type="checkbox" id="menu-drawer" class="peer hidden" />
 
-  <label 
-    for="menu-drawer" 
-    id="menu-toggle" 
-    class="relative z-[110] flex flex-col gap-1.5 md:hidden cursor-pointer p-2 opacity-0 pointer-events-none transition-all duration-300"
-  >
-    <span class="w-6 h-0.5 bg-white transition-all duration-300 origin-center"></span>
-    <span class="w-6 h-0.5 bg-white transition-all duration-300"></span>
-    <span class="w-6 h-0.5 bg-white transition-all duration-300 origin-center"></span>
-  </label>
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 font-f1">
+  <div class="glass-container relative flex items-center justify-between px-6 py-3 md:py-4 rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+    
+    <div class="absolute -inset-full bg-gradient-to-r from-red-600/20 via-transparent to-red-600/20 animate-[spin_10s_linear_infinite] -z-10"></div>
 
-  <ul 
-    id="nav-links"
-    class="
-      absolute md:relative top-full right-0 w-full md:w-auto 
-      flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-8 
-      bg-[#0a0a0a]/95 md:bg-transparent backdrop-blur-3xl md:backdrop-blur-0 
-      transition-all duration-500 z-[100]
+    <a href="/" class="flex items-center group shrink-0">
+      <div 
+        id="logo-container" 
+        class="flex items-center bg-red-600 h-10 px-3 rounded-lg transition-all duration-700 ease-in-out group-hover:skew-x-[-12deg] overflow-hidden shadow-[0_0_15px_rgba(225,6,0,0.3)]"
+      >
+        <span class="italic font-black text-white text-2xl leading-none translate-y-[-1px]">F</span>
+        
+        <div class="grid grid-cols-[0fr] transition-[grid-template-columns] duration-700 ease-in-out" id="logo-expansion">
+          <div class="overflow-hidden">
+            <span class="italic font-black text-white text-[10px] uppercase whitespace-nowrap opacity-0 transition-opacity duration-500 ml-0.5 mr-1 mt-2 block" id="logo-text">
+              ormula
+            </span>
+          </div>
+        </div>
+
+        <span class="italic font-black text-white text-2xl leading-none translate-y-[-1px]">1</span>
+      </div>
       
-      /* Oculto por defecto para esperar la animación del Hero */
-      max-h-0 opacity-0 invisible pointer-events-none overflow-hidden
-      
-      /* Estado abierto en móvil (Checkbox Hack) */
-      peer-checked:max-h-96 peer-checked:opacity-100 peer-checked:visible peer-checked:pointer-events-auto 
-      peer-checked:py-8 peer-checked:mt-2
-      
-      /* Escritorio: La animación del Hero controlará el paso a visible */
-      md:max-h-none md:static md:py-0 md:mt-0
-    "
-  >
-    <li class="w-full text-center md:w-auto">
-      <a href="#drivers" class="block py-2 text-white/70 hover:text-white text-[13px] md:text-[11px] uppercase font-bold tracking-[2px] transition-all">Drivers</a>
-    </li>
-    <li class="w-full text-center md:w-auto">
-      <a href="#teams" class="block py-2 text-white/70 hover:text-white text-[13px] md:text-[11px] uppercase font-bold tracking-[2px] transition-all">Teams</a>
-    </li>
-    <li class="w-full text-center md:w-auto">
-      <a href="#schedule" class="block py-2 text-white/70 hover:text-white text-[13px] md:text-[11px] uppercase font-bold tracking-[2px] transition-all">Schedule</a>
-    </li>
-  </ul>
-</div>
+      <span class="ml-3 hidden sm:block font-bold tracking-tighter text-xl text-white">
+        CHAMPIONS<span class="text-red-600">.</span>
+      </span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-6">
+      {navLinks.map(link => (
+        <a href={link.href} class="text-[10px] font-bold text-white/70 hover:text-white hover:drop-shadow-[0_0_5px_#e10600] transition-all uppercase tracking-[0.2em]">
+          {link.name}
+        </a>
+      ))}
+      <button class="relative bg-white text-black px-5 py-2 rounded-full text-[10px] font-black hover:bg-red-600 hover:text-white transition-all overflow-hidden group/btn">
+        <span class="relative z-10">LIVE RACE</span>
+        <div class="absolute inset-0 bg-red-600 scale-x-0 group-hover/btn:scale-x-100 transition-transform origin-left duration-300"></div>
+      </button>
+    </div>
+
+    <button id="menu-toggle" class="md:hidden text-white p-2">
+      <div class="space-y-1.5">
+        <span id="line1" class="block w-6 h-0.5 bg-white transition-all"></span>
+        <span id="line2" class="block w-6 h-0.5 bg-white transition-all"></span>
+      </div>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="hidden absolute top-full left-0 right-0 mt-2 p-4 rounded-2xl glass-container border border-white/10 overflow-hidden">
+    <div class="flex flex-col gap-4 font-f1">
+      {navLinks.map(link => (
+        <a href={link.href} class="text-lg font-bold text-white/90 border-b border-white/5 pb-2 italic uppercase">{link.name}</a>
+      ))}
+      <button class="w-full bg-red-600 text-white py-4 rounded-xl font-black italic tracking-widest shadow-lg">LIVE RACE</button>
+    </div>
+  </div>
+</nav>
 
 <style>
-  #menu-drawer:checked ~ label span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-  #menu-drawer:checked ~ label span:nth-child(2) { opacity: 0; transform: translateX(10px); }
-  #menu-drawer:checked ~ label span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+  .glass-container {
+    background: rgba(10, 10, 12, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  /* Animación del Grid para inyectar el texto */
+  .expanded-grid {
+    grid-template-columns: 1fr !important;
+    padding-right: 4px; /* Espacio antes del 1 */
+  }
+
+  .expanded-opacity {
+    opacity: 1 !important;
+  }
+
+  /* Animación del icono de hamburguesa */
+  .menu-open #line1 { transform: translateY(4px) rotate(45deg); }
+  .menu-open #line2 { transform: translateY(-4px) rotate(-45deg); }
 </style>
+
+<script>
+  function initNavbar() {
+    const toggle = document.querySelector('#menu-toggle');
+    const menu = document.querySelector('#mobile-menu');
+    const expansion = document.querySelector('#logo-expansion');
+    const text = document.querySelector('#logo-text');
+
+    // Menú móvil
+    toggle?.addEventListener('click', () => {
+      menu?.classList.toggle('hidden');
+      menu?.classList.toggle('flex');
+      toggle.classList.toggle('menu-open');
+    });
+
+    // Bucle de animación del logo
+    let isExpanded = false;
+    function animate() {
+      if (!expansion || !text) return;
+      
+      isExpanded = !isExpanded;
+      if (isExpanded) {
+        expansion.classList.add('expanded-grid');
+        setTimeout(() => text.classList.add('expanded-opacity'), 100);
+        setTimeout(animate, 5000); // Mantiene abierto 3s
+      } else {
+        text.classList.remove('expanded-opacity');
+        setTimeout(() => {
+          expansion.classList.remove('expanded-grid');
+          setTimeout(animate, 20000); // Mantiene cerrado 6s
+        }, 200);
+      }
+    }
+
+    // Iniciar a los 2 segundos de carga
+    setTimeout(animate, 2000);
+  }
+
+  document.addEventListener('astro:page-load', initNavbar);
+</script>

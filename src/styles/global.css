@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colores oficiales */
+  /* Colores oficiales ajustados */
   --color-f1-red: #e10600;
   --color-f1-black: #15151e;
-  --color-f1-dark: #0b0b0f;
+  --color-f1-dark: #0a0a0a;
 
   /* Tipografía oficial */
   --font-f1: "Formula1", sans-serif;
@@ -15,7 +15,7 @@
   src: url('/fonts/Formula1-Bold_web_0.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
@@ -23,9 +23,20 @@
   src: url('/fonts/Formula1-Regular_web_0.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
+/* --- ESTILOS BASE DEL BODY --- */
 body {
-  @apply bg-f1-dark text-white font-f1 antialiased;
+  /* Mantenemos solo el color de fondo sólido por si el vídeo falla */
+  @apply bg-f1-dark text-white font-f1 antialiased relative min-h-screen;
+}
+
+@layer base {
+  body {
+    @apply select-none;
+    /* Soporte extra para navegadores antiguos */
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
 }

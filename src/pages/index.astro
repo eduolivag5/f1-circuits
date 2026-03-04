@@ -1,16 +1,90 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import HeroF1 from '../components/HeroF1.astro';
-import Navbar from '../components/Navbar.astro';
-
-const topDrivers = [
-    { id: 'verstappen', name: 'Max Verstappen', team: 'Red Bull Racing', number: '01', img: '/pilots/verstappen.png' },
-    { id: 'leclerc', name: 'Charles Leclerc', team: 'Ferrari', number: '16', img: '/pilots/leclerc.png' },
-    { id: 'alonso', name: 'Fernando Alonso', team: 'Aston Martin', number: '14', img: '/pilots/alonso.png' },
-];
+import DriversSection from '../components/home/DriversSection.astro';
+import TeamsGrid from '../components/home/TeamsGrid.astro';
+import RegsSection from '../components/home/RegsSection.astro';
+import { CIRCUITS } from '../data/data';
 ---
 
-<Layout title="F1 2026 | Minimal">
-    <HeroF1>
-    
+<Layout title="Official Hub">
+
+    <section class="h-screen w-full flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
+        <div class="relative py-4">
+            <h1 class="text-6xl md:text-9xl font-black italic uppercase tracking-tighter text-white leading-none pl-4 md:pl-6">
+                F1 <span class="text-[#e10600] pr-4 md:pr-6">2026</span>
+            </h1>
+        </div>
+        <p class="hero-subtitle text-lg md:text-2xl font-light tracking-[0.2em] md:tracking-[0.3em] uppercase mt-4 text-white/60">
+            The New Era of Speed
+        </p>
+        
+        <div class="absolute bottom-10 opacity-30 animate-bounce">
+            <div class="w-[1px] h-20 bg-gradient-to-b from-white to-transparent mx-auto"></div>
+        </div>
+    </section>
+
+    <div class="relative z-10 space-y-16 max-w-6xl mx-auto">
+        
+        <section id="teams">
+            <TeamsGrid />
+        </section>
+
+        <section id="drivers">
+            <DriversSection />
+        </section>
+
+        <section id="regulations">
+            <RegsSection />
+        </section>
+
+        <section id="calendar" class="px-6 max-w-[1000px] mx-auto text-white">
+             <h2 class="text-4xl md:text-5xl font-black italic uppercase mb-12 text-center">
+                2026 <span class="text-[#e10600]">Calendar</span>
+             </h2>
+             
+             <div class="grid gap-3">
+                {CIRCUITS.map(c => (
+                    <div class="flex flex-col md:flex-row justify-between p-6 bg-white/5 hover:bg-[#e10600]/20 transition-all border-l-4 border-transparent hover:border-[#e10600] group">
+                        <div class="flex flex-col">
+                            <span class="text-[#e10600] font-mono text-sm tracking-widest">ROUND {c.round}</span>
+                            <span class="text-2xl font-bold uppercase tracking-tight">{c.name}</span>
+                        </div>
+                        <div class="flex items-center mt-2 md:mt-0">
+                            <span class="text-xl opacity-40 italic group-hover:opacity-100 transition-opacity font-light">
+                                {c.date}
+                            </span>
+                        </div>
+                    </div>
+                ))}
+             </div>
+        </section>
+    </div>
+
 </Layout>
+
+<style>
+    /* Estilos de animación con el delay solicitado */
+    h1, .hero-subtitle {
+        opacity: 0;
+    }
+
+    h1 {
+        /* He dejado 5s para ser fiel a tu petición anterior, ajusta a 2s si prefieres más rapidez */
+        animation: title-entrance 1.2s cubic-bezier(0.23, 1, 0.32, 1) 2s forwards;
+    }
+
+    .hero-subtitle {
+        animation: title-entrance 1.2s ease-out 2.2s forwards;
+    }
+
+    @keyframes title-entrance {
+        from { 
+            transform: translateY(60px); 
+            opacity: 0; 
+        }
+        to { 
+            transform: translateY(0); 
+            opacity: 1; 
+        }
+    }
+</style>
