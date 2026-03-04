@@ -1,0 +1,94 @@
+---
+import CarModel from "./CarModel.astro";
+import Navbar from "./Navbar.astro";
+---
+
+<header id="hero-header" class="fixed top-0 left-0 z-[100] w-full h-screen bg-black flex items-center justify-center overflow-hidden transform-gpu will-change-[height,background-color]">
+  
+  <nav class="nav-content relative w-[90%] max-w-[1400px] h-full flex items-center justify-center transition-all duration-1000">
+    
+    <div id="brand-group" class="absolute flex items-center justify-center transition-all duration-1000 ease-[cubic-bezier(0.77,0,0.175,1)] transform-gpu">
+      <div class="f1-logo-text opacity-0 w-0 overflow-hidden text-[#ff0000] text-2xl md:text-3xl italic font-black -skew-x-12 leading-none" style="font-family: 'Archivo Black', sans-serif;">
+        <span>F1</span>
+      </div>
+
+      <div class="car-container w-[80vw] md:w-[75vw] max-w-[850px] flex items-center justify-center transform-gpu">
+        <svg viewBox="0 0 512.928 171.468" class="f1-car-svg w-full h-auto max-h-full block drop-shadow-[0_0_15px_rgba(255,0,0,0.3)]">
+          <defs>
+            <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="2" result="blur"></feGaussianBlur>
+              <feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
+            </filter>
+          </defs>
+          <CarModel />
+        </svg>
+      </div>
+    </div>
+
+    <Navbar />
+
+  </nav>
+</header>
+
+<style is:global>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+
+  /* 1. Animación del Coche */
+  .car-outlines path {
+    fill: none !important;
+    stroke: #ff0000; stroke-width: 1.2; filter: url(#neon-glow);
+    stroke-dasharray: 100 800; stroke-dashoffset: 800; opacity: 0;
+    animation: scan-to-solid 6.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+  }
+
+  /* 2. Transformación Header a Navbar */
+  #hero-header { animation: to-liquid-nav 1s cubic-bezier(0.77, 0, 0.175, 1) forwards 7s; }
+  #brand-group { animation: move-to-left-dock 1s cubic-bezier(0.77, 0, 0.175, 1) forwards 7s; left: 50%; transform: translateX(-50%); }
+  .car-container { animation: car-scale-fit 1s cubic-bezier(0.77, 0, 0.175, 1) forwards 7s; }
+  .f1-logo-text { animation: logo-reveal-nav 0.8s ease-out forwards 7.3s; }
+  #menu-toggle { animation: fade-in-button 0.5s forwards 7.5s; }
+
+  @media (min-width: 768px) {
+    #nav-links { animation: nav-reveal-desktop 0.8s ease-out forwards 7.5s; }
+  }
+
+  @keyframes scan-to-solid {
+    0% { opacity: 0; stroke-dashoffset: 800; }
+    75% { opacity: 1; stroke-dashoffset: 0; stroke-dasharray: 100 800; }
+    100% { opacity: 1; stroke-dashoffset: 0; stroke-dasharray: 800 0; stroke-width: 1.5; }
+  }
+
+  @keyframes to-liquid-nav {
+    to { 
+      height: 64px; 
+      background: rgba(10, 10, 10, 0.7); 
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: visible; 
+    }
+  }
+
+  @keyframes move-to-left-dock {
+    to { left: 0%; transform: translateX(0%); }
+  }
+
+  @keyframes car-scale-fit {
+    to { width: 90px; max-height: 40px; }
+  }
+
+  @media (min-width: 768px) {
+    @keyframes car-scale-fit { to { width: 120px; max-height: 45px; } }
+  }
+
+  @keyframes logo-reveal-nav {
+    to { width: 45px; opacity: 1; margin-right: 1rem; }
+  }
+
+  @keyframes nav-reveal-desktop {
+    to { opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(0); }
+  }
+
+  @keyframes fade-in-button {
+    to { opacity: 1; pointer-events: auto; }
+  }
+</style>
