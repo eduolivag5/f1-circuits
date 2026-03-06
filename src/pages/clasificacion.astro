@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import StandingsTable from '../components/StandingsTable.astro';
+import PageHeader from '../components/PageHeader.astro';
+---
+
+<Layout title="Standings | F1 2026">
+    <PageHeader 
+        title="Championship Standings" 
+        highlightedWord="Standings" 
+        subtitle="Season 2026 Official Classification" 
+    />
+
+    <main class="max-w-6xl mx-auto px-6 space-y-20 pb-20">
+        
+        <section>
+            <div class="flex items-center gap-4 mb-8">
+                <h2 class="text-2xl font-black italic uppercase text-white">Drivers <span class="text-[#e10600]">Championship</span></h2>
+                <div class="h-[1px] flex-1 bg-white/10"></div>
+            </div>
+            <StandingsTable mode="drivers" type="full" />
+        </section>
+
+        <section>
+            <div class="flex items-center gap-4 mb-8">
+                <h2 class="text-2xl font-black italic uppercase text-white">Constructors <span class="text-[#e10600]">Championship</span></h2>
+                <div class="h-[1px] flex-1 bg-white/10"></div>
+            </div>
+            <StandingsTable mode="constructors" type="full" />
+        </section>
+
+    </main>
+</Layout>

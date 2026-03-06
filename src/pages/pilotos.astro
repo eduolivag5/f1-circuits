@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TeamCard from '../components/TeamCard.astro';
+import { DRIVERS, TEAMS } from '../data/data';
+import PageHeader from '../components/PageHeader.astro';
+
+const driversByTeam = DRIVERS.reduce((acc, driver) => {
+    (acc[driver.teamId] ||= []).push(driver);
+    return acc;
+}, {} as Record<string, typeof DRIVERS>);
+
+const sortedTeamIds = Object.keys(driversByTeam).sort((a, b) => 
+    TEAMS[a].rank2025 - TEAMS[b].rank2025
+);
+---
+
+<Layout title="Drivers | F1 2026 Official Hub">
+    <PageHeader 
+        title="The Grid" 
+        highlightedWord="Grid" 
+        subtitle="Official 2026 Driver Lineup" 
+    />
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {sortedTeamIds.map((teamId, index) => (
+            <TeamCard 
+                teamId={teamId} 
+                team={TEAMS[teamId]} 
+                drivers={driversByTeam[teamId]} 
+                index={index} 
+            />
+        ))}
+    </div>
+</Layout>
+
+<style>
+    .text-outline {
+        -webkit-text-stroke: 1px rgba(255,255,255,0.1);
+        color: transparent;
+    }
+</style>

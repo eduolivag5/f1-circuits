@@ -1,0 +1,78 @@
+---
+const currentYear = new Date().getFullYear();
+
+const SOCIALS = [
+  { name: 'Instagram', url: 'https://instagram.com/f1', icon: 'instagram' },
+  { name: 'X', url: 'https://x.com/f1', icon: 'twitter-x' },
+  { name: 'YouTube', url: 'https://youtube.com/f1', icon: 'youtube' },
+  { name: 'TikTok', url: 'https://tiktok.com/@f1', icon: 'tiktok' }
+];
+
+const LINKS = [
+  { label: 'Drivers', href: '/drivers' },
+  { label: 'Standings', href: '/clasificacion' },
+  { label: 'Teams', href: '/#teams' },
+  { label: 'Regulations', href: '/#regulations' }
+];
+---
+
+<footer class="mt-20 bg-black/40 pt-16 pb-8 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+      
+      <div class="space-y-6">
+        <h2 class="text-3xl font-black italic tracking-tighter text-white">
+          F1 <span class="text-[#e10600]">2026</span>
+        </h2>
+        <p class="text-white/40 text-sm max-w-xs leading-relaxed font-light">
+          The official digital hub for the new era of Formula 1. 
+          Experience the pinnacle of motorsport with next-gen power units.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-4">
+          <p class="text-[10px] uppercase tracking-[0.3em] font-bold text-white/20">Navigation</p>
+          <ul class="space-y-2">
+            {LINKS.map(link => (
+              <li>
+                <a href={link.href} class="text-sm text-white/60 hover:text-[#e10600] transition-colors uppercase font-medium italic">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <p class="text-[10px] uppercase tracking-[0.3em] font-bold text-white/20">Follow the excitement</p>
+        <div class="flex gap-4">
+          {SOCIALS.map(social => (
+            <a 
+              href={social.url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:border-[#e10600] hover:text-[#e10600] hover:scale-110 transition-all duration-300 bg-white/5"
+              aria-label={social.name}
+            >
+              <i class={`bi bi-${social.icon} text-lg`}></i>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-[10px] text-white/20 uppercase tracking-widest font-mono">
+        &copy; {currentYear} Formula One World Championship Limited
+      </p>
+      <div class="flex gap-8">
+        <a href="#" class="text-[10px] text-white/20 hover:text-white transition-colors uppercase tracking-widest">Privacy Policy</a>
+        <a href="#" class="text-[10px] text-white/20 hover:text-white transition-colors uppercase tracking-widest">Terms of Use</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">

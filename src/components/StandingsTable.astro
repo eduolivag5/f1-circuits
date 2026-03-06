@@ -1,0 +1,116 @@
+---
+import { DRIVERS, TEAMS } from '../data/data';
+
+interface Props {
+  type?: 'full' | 'compact';
+  mode?: 'drivers' | 'constructors';
+}
+
+const { type = 'full', mode = 'drivers' } = Astro.props;
+const isCompact = type === 'compact';
+const isDrivers = mode === 'drivers';
+
+// --- LÓGICA DE DATOS ---
+let displayData = [];
+
+if (isDrivers) {
+  displayData = [...DRIVERS]
+    .sort((a, b) => (b.points || 0) - (a.points || 0) || (a.rank2025 || 99) - (b.rank2025 || 99))
+    .slice(0, isCompact ? 5 : undefined)
+    .map(d => {
+      const nameParts = d.name.split(' ');
+      return {
+        id: d.id,
+        nameMain: nameParts.slice(1).join(' '),
+        nameSub: nameParts[0],
+        points: d.points || 0,
+        team: TEAMS[d.teamId],
+        image: `/drivers/${d.id}.png`,
+        href: `/drivers/${d.id}` // URL dinámica
+      };
+    });
+} else {
+  const teamStats = Object.keys(TEAMS).map(teamId => {
+    const teamPoints = DRIVERS
+      .filter(d => d.teamId === teamId)
+      .reduce((acc, curr) => acc + (curr.points || 0), 0);
+    
+    return {
+      id: teamId,
+      nameMain: TEAMS[teamId].name,
+      nameSub: TEAMS[teamId].fullName,
+      points: teamPoints,
+      team: TEAMS[teamId],
+      image: `/teams/${teamId}.svg`,
+      href: `#` // O /teams/${teamId} si creas esa página
+    };
+  });
+
+  displayData = teamStats
+    .sort((a, b) => b.points - a.points || a.team.rank2025 - b.team.rank2025)
+    .slice(0, isCompact ? 5 : undefined);
+}
+
+const CELL_CLASS = "py-4 px-6";
+---
+
+<div class="w-full">
+  <div class="overflow-hidden rounded-xl border border-white/10 bg-zinc-900/40">
+    <table class="w-full text-left border-separate border-spacing-0">
+      <thead>
+        <tr class="bg-white/5 text-[10px] uppercase tracking-[0.2em] text-white/40">
+          <th class={CELL_CLASS}>Pos</th>
+          <th class={CELL_CLASS}>{isDrivers ? 'Driver' : 'Team'}</th>
+          {isDrivers && !isCompact && <th class={`${CELL_CLASS} hidden md:table-cell`}>Team</th>}
+          <th class={`${CELL_CLASS} text-right`}>PTS</th>
+        </tr>
+      </thead>
+      <tbody>
+        {displayData.map((item, i) => (
+          <tr class="group border-b border-white/5 last:border-0 hover:bg-white/[0.05] transition-all relative">
+            <td class={`${CELL_CLASS} font-mono text-lg italic font-black text-white/20 group-hover:text-[#e10600] transition-colors`}>
+              {(i + 1).toString().padStart(2, '0')}
+            </td>
+            
+            <td class={CELL_CLASS}>
+              <a href={item.href} class="flex items-center gap-4 outline-none">
+                <div class="w-1 h-10 rounded-full" style={`background-color: ${item.team.baseColor}`} />
+                
+                {!isCompact && (
+                  <div 
+                    class={`relative hidden sm:block overflow-hidden ${isDrivers ? 'w-12 h-12 rounded-full bg-white/5' : 'w-16 h-10 object-contain'}`}
+                    transition:name={`driver-image-${item.id}`}
+                  >
+                    <img 
+                      src={item.image} 
+                      alt="" 
+                      class={`w-full h-full ${isDrivers ? 'object-cover object-top scale-110' : 'p-1 object-contain'} group-hover:scale-125 transition-transform duration-500`}
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <p class="text-white font-bold leading-none uppercase italic tracking-tighter group-hover:text-[#e10600] group-hover:translate-x-1 transition-all">
+                    {item.nameMain}
+                  </p>
+                  <p class="text-[10px] text-white/40 uppercase mt-1 tracking-widest">{item.nameSub}</p>
+                </div>
+              </a>
+            </td>
+
+            {isDrivers && !isCompact && (
+              <td class={`${CELL_CLASS} hidden md:table-cell`}>
+                <span class="text-xs text-white/60 uppercase italic">{item.team.name}</span>
+              </td>
+            )}
+
+            <td class={`${CELL_CLASS} text-right font-mono font-bold text-white group-hover:text-[#e10600] text-xl transition-colors`}>
+              {item.points}<span class="text-[10px] text-white/40 uppercase ml-1">pts</span>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -4,32 +4,61 @@ import DriversSection from '../components/home/DriversSection.astro';
 import TeamsGrid from '../components/home/TeamsGrid.astro';
 import RegsSection from '../components/home/RegsSection.astro';
 import { CIRCUITS } from '../data/data';
+import StandingsTable from '../components/StandingsTable.astro';
+import Title from '../components/Title.astro';
+
+const videoSrc = "/videos/intro-f1.mp4"; 
 ---
 
 <Layout title="Official Hub">
 
-    <section class="h-screen w-full flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
-        <div class="relative py-4">
+    <section class="h-screen w-full flex flex-col items-center justify-center text-center px-4 relative overflow-hidden bg-black">
+        <div class="absolute inset-0 w-full h-full z-0">
+            <div class="absolute inset-0 z-10 bg-black/40"></div>
+            <div class="absolute inset-0 z-20 bg-gradient-to-b from-transparent via-transparent to-[#050505]"></div>
+            
+            <video autoplay loop muted playsinline class="w-full h-full object-cover brightness-[0.5] contrast-[1.1]">
+                <source src={videoSrc} type="video/mp4" />
+            </video>
+        </div>
+
+        <div class="relative z-30 py-4">
             <h1 class="text-6xl md:text-9xl font-black italic uppercase tracking-tighter text-white leading-none pl-4 md:pl-6">
                 F1 <span class="text-[#e10600] pr-4 md:pr-6">2026</span>
             </h1>
+            <p class="hero-subtitle text-lg md:text-2xl font-light tracking-[0.2em] md:tracking-[0.3em] uppercase mt-4 text-white/60">
+                The New Era of Speed
+            </p>
         </div>
-        <p class="hero-subtitle text-lg md:text-2xl font-light tracking-[0.2em] md:tracking-[0.3em] uppercase mt-4 text-white/60">
-            The New Era of Speed
-        </p>
         
-        <div class="absolute bottom-10 opacity-30 animate-bounce">
+        <div class="absolute bottom-10 z-30 opacity-30 animate-bounce">
             <div class="w-[1px] h-20 bg-gradient-to-b from-white to-transparent mx-auto"></div>
         </div>
     </section>
 
-    <div class="relative z-10 space-y-16 max-w-6xl mx-auto">
+    <div class="relative z-10 space-y-16 py-20 px-4 max-w-6xl mx-auto">
         
+        <section id="quick-standings">
+            <Title title="Standings" subtitle="The Current Leaderboard" />
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="mb-4 text-white/50 uppercase text-xs tracking-widest font-bold">Top 5 Drivers</h3>
+                    <StandingsTable mode="drivers" type="compact" />
+                </div>
+                <div>
+                    <h3 class="mb-4 text-white/50 uppercase text-xs tracking-widest font-bold">Top 5 Teams</h3>
+                    <StandingsTable mode="constructors" type="compact" />
+                </div>
+            </div>            
+        </section>
+
         <section id="teams">
+            <Title title="Constructors" subtitle="The Competitors of the New Era" />
             <TeamsGrid />
         </section>
 
         <section id="drivers">
+            <Title title="Drivers" subtitle="The Stars of the New Era" />
             <DriversSection />
         </section>
 
@@ -37,11 +66,8 @@ import { CIRCUITS } from '../data/data';
             <RegsSection />
         </section>
 
-        <section id="calendar" class="px-6 max-w-[1000px] mx-auto text-white">
-             <h2 class="text-4xl md:text-5xl font-black italic uppercase mb-12 text-center">
-                2026 <span class="text-[#e10600]">Calendar</span>
-             </h2>
-             
+        <section id="calendar">
+             <Title title="2026 Calendar" subtitle="The Race Schedule" />
              <div class="grid gap-3">
                 {CIRCUITS.map(c => (
                     <div class="flex flex-col md:flex-row justify-between p-6 bg-white/5 hover:bg-[#e10600]/20 transition-all border-l-4 border-transparent hover:border-[#e10600] group">
@@ -63,13 +89,11 @@ import { CIRCUITS } from '../data/data';
 </Layout>
 
 <style>
-    /* Estilos de animación con el delay solicitado */
     h1, .hero-subtitle {
         opacity: 0;
     }
 
     h1 {
-        /* He dejado 5s para ser fiel a tu petición anterior, ajusta a 2s si prefieres más rapidez */
         animation: title-entrance 1.2s cubic-bezier(0.23, 1, 0.32, 1) 1s forwards;
     }
 

@@ -1,21 +1,18 @@
 ---
 import { DRIVERS, TEAMS } from "../../data/data";
-import Title from "../Title.astro";
 
-// Lógica de filtrado: 
-// 1. [...DRIVERS] crea una copia para no alterar el array original.
-// 2. .sort() ordena de forma descendente (b.wins - a.wins).
-// 3. .slice(0, 3) toma los 3 primeros tras el ordenado.
 const featured = [...DRIVERS]
     .sort((a, b) => b.wins - a.wins)
     .slice(0, 3);
 ---
-<section id="drivers" class="py-32 px-6 max-w-[1400px] mx-auto">
-    <Title title="Top drivers" />
+<section id="drivers">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {featured.map(d => (
-            <div class="group relative bg-white/5 p-8 rounded-2xl border-b-4 transition-all hover:bg-white/10 overflow-hidden" 
-                 style={`border-color: ${TEAMS[d.teamId].baseColor}`}>
+            <a 
+                href={`/drivers/${d.id}`}
+                class="group relative bg-white/5 p-8 rounded-2xl border-b-4 transition-all hover:bg-white/10 overflow-hidden block" 
+                style={`border-color: ${TEAMS[d.teamId].baseColor}`}
+            >
                 
                 {d.titles > 0 && (
                     <div class="absolute top-4 left-4 z-30 bg-yellow-500 text-black px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter flex items-center gap-1">
@@ -27,9 +24,12 @@ const featured = [...DRIVERS]
                     {d.number}
                 </span>
 
-                <div class="relative h-64 mb-6 flex items-center justify-center">
+                <div 
+                    class="relative h-64 mb-6 flex items-center justify-center"
+                    transition:name={`driver-image-${d.id}`}
+                >
                     <img 
-                        src={`/pilots/${d.id}.png`} 
+                        src={`/drivers/${d.id}.png`} 
                         alt={d.name}
                         class="h-full object-contain z-10 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] group-hover:scale-105 transition-transform duration-500"
                     />
@@ -37,10 +37,12 @@ const featured = [...DRIVERS]
                 </div>
 
                 <div class="relative z-20">
-                    <p class="text-f1-red font-bold text-xs uppercase tracking-widest">{TEAMS[d.teamId].name}</p>
-                    <h3 class="text-3xl font-black italic uppercase mb-4">{d.name}</h3>
+                    <p class="font-bold text-xs uppercase tracking-widest mb-1" style={`color: ${TEAMS[d.teamId].baseColor}`}>
+                        {TEAMS[d.teamId].name}
+                    </p>
+                    <h3 class="text-3xl font-black italic uppercase mb-4 text-white">{d.name}</h3>
 
-                    <div class="grid grid-cols-4 gap-2 border-t border-white/10 pt-4">
+                    <div class="grid grid-cols-4 gap-2 border-t border-white/10 pt-4 text-white">
                         <div class="text-center">
                             <p class="text-[9px] uppercase opacity-50">Titles</p>
                             <p class="text-lg font-bold text-yellow-500">{d.titles}</p>
@@ -59,7 +61,7 @@ const featured = [...DRIVERS]
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         ))}
     </div>
 </section>
