@@ -1,44 +1,22 @@
 ---
 interface Props {
   title: string;
-  highlightedWord?: string;
+  highlightedWord?: string; // Palabra en rojo
   subtitle?: string;
-  centered?: boolean;
 }
 
 const { 
   title, 
-  highlightedWord, 
-  subtitle, 
-  centered = true 
+  highlightedWord = "Feed", 
+  subtitle = "Temporada 2026 - Era Eléctrica" 
 } = Astro.props;
-
-// Dividimos el título para insertar el span en la palabra elegida
-const parts = title.split(' ');
 ---
 
-<header class={`max-w-5xl mx-auto mb-16 ${centered ? 'text-center' : 'text-left'}`}>
-  <h1 class="text-6xl md:text-8xl font-black italic uppercase tracking-tighter text-white mb-4 leading-none">
-    {parts.map((word, index) => (
-      <span class={word.toLowerCase() === highlightedWord?.toLowerCase() ? "text-[#e10600]" : ""}>
-        {word}{index < parts.length - 1 ? ' ' : ''}
-      </span>
-    ))}
+<header class="mb-12 border-l-4 border-red-600 pl-6">
+  <h1 class="text-5xl md:text-7xl font-black uppercase italic tracking-tighter">
+    {title} <span class="text-red-600">{highlightedWord}</span>
   </h1>
-  
-  {subtitle && (
-    <p class="text-white/40 uppercase tracking-[0.5em] text-[10px] md:text-xs animate-pulse-slow">
-      {subtitle}
-    </p>
-  )}
+  <p class="text-white/40 uppercase tracking-[0.4em] text-xs mt-2">
+    {subtitle}
+  </p>
 </header>
-
-<style>
-  .animate-pulse-slow {
-    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 0.7; }
-  }
-</style>

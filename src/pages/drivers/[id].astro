@@ -15,6 +15,10 @@ const team = TEAMS[driver.teamId];
 const [firstName, ...lastNameParts] = driver.name.split(' ');
 const lastName = lastNameParts.join(' ');
 
+// Lógica para la bandera (asumiendo que driver.country es el nombre del país o código)
+// Si tienes un mapeo de ISO codes sería ideal, si no, usamos el nombre.
+const countryCode = driver.country || driver.country.slice(0, 2).toLowerCase(); 
+
 const statCards = [
   { 
     label: "World Titles", 
@@ -69,7 +73,10 @@ const statCards = [
 
         <div class="flex-1 text-center md:text-left space-y-3 z-10">
           
-          <h1 class="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">
+          <h1 
+            class="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none"
+            transition:name={`driver-name-${driver.id}`}
+          >
             <span class="text-white/20 not-italic font-light text-xl md:text-2xl block tracking-widest mb-1">{firstName}</span>
             <span style={`color: ${team.baseColor}`}>{lastName}</span>
           </h1>
@@ -80,8 +87,18 @@ const statCards = [
           </div>
           
           <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
-             <span class="text-[10px] font-bold tracking-[0.3em] uppercase opacity-30">{driver.country}</span>
-             <span class="text-[10px] font-bold tracking-[0.3em] uppercase py-1 px-3 rounded-md bg-white/5 border border-white/5" style={`color: ${team.baseColor}`}>Rank 2025: P{driver.rank2025}</span>
+             <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/5">
+                <img 
+                  src={`https://flagicons.lipis.dev/flags/4x3/${driver.country.toLowerCase()}.svg`} 
+                  class="w-4 h-auto rounded-sm object-cover" 
+                  alt={driver.country}
+                />
+                <span class="text-[10px] font-bold tracking-[0.3em] uppercase opacity-60">
+                  {driver.country.slice(0, 3)}
+                </span>
+             </div>
+             
+             <span class="text-[10px] font-bold tracking-[0.3em] uppercase py-1 px-3 rounded-full bg-white/5 border border-white/5" style={`color: ${team.baseColor}`}>Rank 2025: P{driver.rank2025}</span>
           </div>
         </div>
       </header>
@@ -104,14 +121,12 @@ const statCards = [
           </div>
         ))}
       </div>
-
+      
       <div class="mt-8 p-10 rounded-[2.5rem] border border-white/5 bg-[#080808]/50 backdrop-blur-md relative overflow-hidden">
         <div class="absolute -bottom-10 -right-10 text-[15rem] font-black italic text-white/[0.02] select-none leading-none">
           {driver.number}
         </div>
-
         <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
-            
             <div class="flex flex-col items-center justify-center">
                 <div class="relative flex items-center justify-center">
                     <svg class="w-40 h-40 transform -rotate-90">
@@ -127,13 +142,11 @@ const statCards = [
                     </div>
                 </div>
             </div>
-
             <div class="lg:col-span-2 space-y-8">
                 <div class="flex items-center gap-4">
                     <span class="h-[1px] w-12" style={`background-color: ${team.baseColor}`}></span>
                     <h3 class="text-[10px] font-black uppercase tracking-[0.6em] text-white/30 italic">2026 Telemetry Data</h3>
                 </div>
-
                 <div class="grid grid-cols-3 gap-6">
                     <div class="space-y-1">
                         <p class="text-[8px] font-bold text-white/10 uppercase tracking-widest">Status</p>
@@ -151,15 +164,6 @@ const statCards = [
             </div>
         </div>
       </div>
-
     </div>
   </main>
 </Layout>
-
-<style>
-  /* Sin animaciones personalizadas */
-  body {
-    background-color: #030303;
-    letter-spacing: -0.02em;
-  }
-</style>

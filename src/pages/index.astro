@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import DriversSection from '../components/home/DriversSection.astro';
 import TeamsGrid from '../components/home/TeamsGrid.astro';
 import RegsSection from '../components/home/RegsSection.astro';
-import { CIRCUITS } from '../data/data';
+import CalendarSection from '../components/home/CalendarSection.astro';
 import StandingsTable from '../components/StandingsTable.astro';
 import Title from '../components/Title.astro';
 
@@ -36,7 +36,7 @@ const videoSrc = "/videos/intro-f1.mp4";
         </div>
     </section>
 
-    <div class="relative z-10 space-y-16 py-20 px-4 max-w-6xl mx-auto">
+    <div class="relative z-10 space-y-32 py-20 px-4 max-w-6xl mx-auto">
         
         <section id="quick-standings">
             <Title title="Standings" subtitle="The Current Leaderboard" />
@@ -52,6 +52,11 @@ const videoSrc = "/videos/intro-f1.mp4";
             </div>            
         </section>
 
+        <section id="calendar">            
+            <Title title="2026 Calendar" subtitle="The Race Schedule" />
+            <CalendarSection />
+        </section>
+
         <section id="teams">
             <Title title="Constructors" subtitle="The Competitors of the New Era" />
             <TeamsGrid />
@@ -64,26 +69,7 @@ const videoSrc = "/videos/intro-f1.mp4";
 
         <section id="regulations">
             <RegsSection />
-        </section>
-
-        <section id="calendar">
-             <Title title="2026 Calendar" subtitle="The Race Schedule" />
-             <div class="grid gap-3">
-                {CIRCUITS.map(c => (
-                    <div class="flex flex-col md:flex-row justify-between p-6 bg-white/5 hover:bg-[#e10600]/20 transition-all border-l-4 border-transparent hover:border-[#e10600] group">
-                        <div class="flex flex-col">
-                            <span class="text-[#e10600] font-mono text-sm tracking-widest">ROUND {c.round}</span>
-                            <span class="text-2xl font-bold uppercase tracking-tight">{c.name}</span>
-                        </div>
-                        <div class="flex items-center mt-2 md:mt-0">
-                            <span class="text-xl opacity-40 italic group-hover:opacity-100 transition-opacity font-light">
-                                {c.date}
-                            </span>
-                        </div>
-                    </div>
-                ))}
-             </div>
-        </section>
+        </section>        
     </div>
 
 </Layout>

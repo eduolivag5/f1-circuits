@@ -44,13 +44,17 @@ const formatName = (fullName: string) => {
             {drivers.map((driver) => {
                 const { first, last } = formatName(driver.name);
                 return (
-                    <div class="driver-entry group/driver">
+                    /* 1. Envolvemos en un <a> con la ruta dinámica */
+                    <a href={`/drivers/${driver.id}`} class="driver-entry group/driver block no-underline">
                         <div class="flex justify-between items-end mb-4">
                             <div class="flex items-baseline gap-3">
                                 <span class="text-4xl font-black italic leading-none text-transparent number-stroke">
                                     {driver.number}
                                 </span>
-                                <h3 class="text-xl font-bold uppercase tracking-tight text-white/90 group-hover/driver:text-white transition-colors">
+                                <h3 
+                                    class="text-xl font-bold uppercase tracking-tight text-white/90 group-hover/driver:text-white transition-colors"
+                                    transition:name={`driver-name-${driver.id}`}
+                                >
                                     <span class="text-sm font-medium opacity-70 block mb-0.5">{first}</span>
                                     <span class="text-2xl font-black block -mt-1">{last}</span>
                                 </h3>
@@ -71,7 +75,7 @@ const formatName = (fullName: string) => {
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </a>
                 );
             })}
         </div>

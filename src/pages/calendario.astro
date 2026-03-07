@@ -2,42 +2,75 @@
 import PageHeader from '../components/PageHeader.astro';
 import { CIRCUITS } from '../data/data';
 import Layout from '../layouts/Layout.astro';
+
+// --- LÓGICA DE FECHAS (Sincronizada con la Home) ---
+const now = new Date();
+const currentYear = 2026;
+
+const parseF1Date = (dateStr: string) => {
+    const parts = dateStr.split(' ');
+    const monthStr = parts[parts.length - 1]; 
+    const dayStr = parts[parts.length - 2].split('-').pop(); 
+    
+    const months: { [key: string]: number } = {
+        'JAN': 0, 'FEB': 1, 'MAR': 2, 'APR': 3, 'MAY': 4, 'JUN': 5,
+        'JUL': 6, 'AUG': 7, 'SEP': 8, 'OCT': 9, 'NOV': 10, 'DEC': 11
+    };
+    
+    return new Date(currentYear, months[monthStr], parseInt(dayStr || '1'));
+};
 ---
 
 <Layout title="F1 2026 Calendar">
     <PageHeader 
-        title="The Calendar" 
+        title="The" 
         highlightedWord="Calendar" 
         subtitle="Official 2026 Race Schedule" 
     />
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-4 pb-20 max-w-7xl mx-auto">
         {CIRCUITS.map((circuit, index) => {
-            const isPriority = index < 3;
+            const isPriority = index < 6; // Aumentamos a 6 para mejor LCP en desktop
+            const raceDate = parseF1Date(circuit.date);
+            const isPast = raceDate < now;
             
             return (
                 <a 
                     href={`/circuit/${circuit.id}`} 
                     data-astro-prefetch="hover"
-                    class="circuit-card group bg-zinc-900/40 border border-white/10 hover:border-f1-red/50 transition-all duration-500 relative flex flex-col rounded-[2.5rem] shadow-2xl hover:shadow-f1-red/10"
+                    class={`circuit-card group border transition-all duration-500 relative flex flex-col rounded-[2.5rem] shadow-2xl overflow-hidden ${
+                        isPast 
+                        ? "bg-zinc-900/20 border-white/5 opacity-60 grayscale hover:grayscale-0 hover:opacity-100" 
+                        : "bg-zinc-900/60 border-white/10 hover:border-f1-red/50 hover:shadow-f1-red/10"
+                    }`}
                 >
-                    <div class="absolute top-6 right-6 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full font-black italic group-hover:bg-f1-red group-hover:text-white transition-all duration-300 text-[10px] z-20 border border-white/5">
-                        ROUND {circuit.round}
+                    <div class={`absolute top-6 right-6 backdrop-blur-md px-4 py-1.5 rounded-full font-black italic transition-all duration-300 text-[10px] z-20 border border-white/5 ${
+                        isPast ? "bg-white/5 text-white/40" : "bg-white/10 text-white group-hover:bg-f1-red group-hover:scale-110"
+                    }`}>
+                        ROUND {circuit.round} {isPast && "• DONE"}
                     </div>
 
                     <div class="p-10">
-                        <p class="text-f1-red font-bold text-xs mb-3 tracking-[0.2em] font-f1-bold">{circuit.date}</p>
+                        <p class={`font-bold text-xs mb-3 tracking-[0.2em] font-f1-bold ${
+                            isPast ? "text-zinc-500" : "text-f1-red"
+                        }`}>
+                            {circuit.date}
+                        </p>
+                        
                         <h2 
                             class="text-2xl font-black uppercase italic tracking-tight mb-1 font-f1-bold group-hover:text-white transition-colors"
                             transition:name={`title-${circuit.id}`}
                         >
                             {circuit.name}
                         </h2>
-                        <p class="text-zinc-500 text-xs uppercase font-bold tracking-widest mb-10">{circuit.location}</p>
+                        
+                        <p class="text-zinc-500 text-xs uppercase font-bold tracking-widest mb-10">
+                            {circuit.location}
+                        </p>
 
                         <div class="h-44 flex items-center justify-center relative">
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10 group-hover:opacity-20 transition-all duration-700">
-                                <span class="text-white text-9xl font-black italic uppercase select-none font-f1-bold scale-110">
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5 group-hover:opacity-10 transition-all duration-700">
+                                <span class="text-white text-9xl font-black italic uppercase select-none font-f1-bold scale-125">
                                     {circuit.id.substring(0, 3)}
                                 </span>
                             </div>
@@ -53,8 +86,12 @@ import Layout from '../layouts/Layout.astro';
                         </div>
                     </div>
 
-                    <div class="mt-auto mx-4 mb-4 bg-white/5 backdrop-blur-md rounded-[1.8rem] py-4 px-8 flex justify-between items-center group-hover:bg-f1-red/90 transition-all duration-500 border border-white/5">
-                        <span class="text-[10px] font-black tracking-[0.2em] uppercase italic text-white/80 group-hover:text-white">Race Details</span>
+                    <div class={`mt-auto mx-4 mb-4 backdrop-blur-md rounded-[1.8rem] py-4 px-8 flex justify-between items-center transition-all duration-500 border border-white/5 ${
+                        isPast ? "bg-white/5 opacity-50" : "bg-white/5 group-hover:bg-f1-red group-hover:translate-y-[-4px]"
+                    }`}>
+                        <span class="text-[10px] font-black tracking-[0.2em] uppercase italic text-white/80 group-hover:text-white">
+                            {isPast ? "Results & Stats" : "Race Details"}
+                        </span>
                         <div class="bg-white/10 rounded-full p-1 group-hover:bg-white/20 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -79,11 +116,7 @@ import Layout from '../layouts/Layout.astro';
         transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    img {
-        aspect-ratio: 3 / 2;
-    }
-
-    /* Suavizado de bordes para fuentes en browsers Webkit */
+    /* Suavizado de bordes */
     .font-f1-bold {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;

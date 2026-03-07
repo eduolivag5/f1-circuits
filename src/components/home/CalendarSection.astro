@@ -1,0 +1,86 @@
+---
+import { CIRCUITS } from '../../data/data';
+
+const now = new Date();
+const currentYear = 2026;
+
+const parseF1Date = (dateStr: string) => {
+    const parts = dateStr.split(' ');
+    const monthStr = parts[parts.length - 1]; 
+    const dayStr = parts[parts.length - 2].split('-').pop(); 
+    
+    const months: { [key: string]: number } = {
+        'JAN': 0, 'FEB': 1, 'MAR': 2, 'APR': 3, 'MAY': 4, 'JUN': 5,
+        'JUL': 6, 'AUG': 7, 'SEP': 8, 'OCT': 9, 'NOV': 10, 'DEC': 11
+    };
+    
+    return new Date(currentYear, months[monthStr], parseInt(dayStr || '1'));
+};
+
+const nextRaceIndex = CIRCUITS.findIndex(c => parseF1Date(c.date) >= now);
+const displayLimit = nextRaceIndex === -1 ? CIRCUITS.length : nextRaceIndex + 3;
+const visibleCircuits = CIRCUITS.slice(0, displayLimit);
+const hasMore = CIRCUITS.length > displayLimit;
+---
+
+<section id="calendar">    
+    <div class="grid gap-3">
+        {visibleCircuits.map(c => {
+            const isPast = parseF1Date(c.date) < now;
+            
+            return (
+                <div class={`flex flex-col md:flex-row justify-between p-6 transition-all duration-500 ease-out border-l-4 group relative overflow-hidden ${
+                    isPast 
+                    ? "bg-white/[0.02] border-transparent opacity-40 grayscale hover:grayscale-0 hover:opacity-100" 
+                    : "bg-white/5 border-transparent hover:border-[#e10600] hover:bg-[#e10600]/10"
+                }`}>
+                    <div class="flex flex-col relative z-10">
+                        <span class={`font-mono text-xs tracking-[0.2em] transition-colors duration-500 ${
+                            isPast ? "text-white/30" : "text-[#e10600]"
+                        }`}>
+                            ROUND {c.round} {isPast && "• COMPLETED"}
+                        </span>
+                        <span class={`text-2xl font-black uppercase tracking-tighter mt-1 transition-transform duration-500 group-hover:translate-x-1 ${
+                            isPast ? "text-white/40" : "text-white"
+                        }`}>
+                            {c.name}
+                        </span>
+                    </div>
+                    <div class="flex items-center mt-4 md:mt-0 relative z-10">
+                        <span class={`text-xl italic font-light tracking-widest transition-all duration-500 ${
+                            isPast ? "opacity-20" : "opacity-40 group-hover:opacity-100 group-hover:text-white"
+                        }`}>
+                            {c.date}
+                        </span>
+                    </div>
+                </div>
+            );
+        })}
+    </div>
+
+    {hasMore && (
+        <div class="mt-12 text-center">
+            <a 
+                href="/calendario" 
+                class="calendar-btn inline-block px-12 py-4 relative group overflow-hidden border border-white/10"
+            >
+                <span class="relative z-10 text-white uppercase tracking-[0.3em] text-xs font-bold transition-colors duration-500 group-hover:text-white">
+                    Ver calendario completo
+                </span>
+                <div class="absolute inset-0 bg-[#e10600] translate-y-full transition-transform duration-500 ease-out group-hover:translate-y-0"></div>
+            </a>
+        </div>
+    )}
+</section>
+
+<style>
+    .calendar-btn {
+        background: linear-gradient(to right, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .calendar-btn:hover {
+        border-color: #e10600;
+        box-shadow: 0 0 30px rgba(225, 6, 0, 0.2);
+    }
+</style>

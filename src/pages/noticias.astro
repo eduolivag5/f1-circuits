@@ -1,0 +1,133 @@
+---
+import PageHeader from "../components/PageHeader.astro";
+import { NEWS } from "../data/data";
+import Layout from "../layouts/Layout.astro";
+
+const CATEGORY_COLORS = {
+  TECHNICAL: '#27F4D2',
+  MERCADO: '#FF8000',
+  RACE_WEEK: '#EF1A2D',
+  F1_LIVE: '#FFFFFF'
+};
+
+const categories = ['ALL', ...Object.keys(CATEGORY_COLORS)];
+const allNews = NEWS;
+---
+
+<Layout title="F1 2026 | News Feed">
+  <main>      
+    <PageHeader title="The" highlightedWord="Feed" subtitle="Temporada 2026 - Era Eléctrica" />
+
+    <nav class="flex flex-wrap gap-3 mb-12">
+      {categories.map(cat => (
+        <button
+          class="filter-btn px-6 py-2 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest transition-all hover:bg-white hover:text-black active:scale-95"
+          data-category={cat}
+        >
+          {cat.replace('_', ' ')}
+        </button>
+      ))}
+    </nav>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-500" id="news-grid">
+      {allNews.map((news) => (
+        <article 
+          class="news-card bg-zinc-900/40 border border-white/5 rounded-2xl overflow-hidden flex flex-col shadow-2xl"
+          data-category={news.category}
+        >
+          <div class="aspect-video overflow-hidden relative">
+            <div class="absolute inset-0 bg-black/50 z-10"></div>
+            <img 
+              src={news.imageUrl} 
+              alt={news.title}
+              class="w-full h-full object-cover grayscale-[20%]"
+              loading="lazy"
+            />
+            <div class="absolute top-4 left-4 z-20">
+              <span 
+                class="px-3 py-1 rounded text-[10px] font-black tracking-tighter uppercase border shadow-xl"
+                style={`background-color: ${CATEGORY_COLORS[news.category]}; color: #000; border-color: rgba(255,255,255,0.2)`}
+              >
+                {news.category.replace('_', ' ')}
+              </span>
+            </div>
+          </div>
+
+          <div class="p-6 flex flex-col flex-1 relative z-20">
+            <p class="text-[10px] text-white/30 font-mono mb-2">{news.date}</p>
+            <h3 class="text-xl font-black italic uppercase leading-tight mb-4 text-white/95">
+              {news.title}
+            </h3>
+            <p class="text-white/60 leading-relaxed text-sm">
+              {news.excerpt}
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const buttons = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.news-card');
+  const grid = document.getElementById('news-grid');
+
+  const allBtn = document.querySelector('[data-category="ALL"]');
+  allBtn?.classList.add('bg-red-600', 'text-white', 'border-red-600');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const selectedCat = btn.getAttribute('data-category');
+
+      // 1. Estilo de botones
+      buttons.forEach(b => b.classList.remove('bg-red-600', 'text-white', 'border-red-600'));
+      btn.classList.add('bg-red-600', 'text-white', 'border-red-600');
+
+      // 2. Animación de "Limpieza"
+      grid?.classList.add('opacity-0', 'translate-y-4');
+
+      setTimeout(() => {
+        cards.forEach(card => {
+          const cardCat = card.getAttribute('data-category');
+          const isVisible = selectedCat === 'ALL' || cardCat === selectedCat;
+          
+          if (isVisible) {
+            (card as HTMLElement).style.display = 'flex';
+          } else {
+            (card as HTMLElement).style.display = 'none';
+          }
+        });
+
+        // 3. Volver a mostrar con el grid ya reorganizado
+        grid?.classList.remove('opacity-0', 'translate-y-4');
+      }, 300); // Tiempo que dura el desvanecimiento inicial
+    });
+  });
+</script>
+
+<style>
+  main {
+    background-image: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+  }
+
+  /* Animación para el contenedor del grid */
+  #news-grid {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    will-change: opacity, transform;
+  }
+
+  .news-card {
+    /* Eliminamos transiciones individuales para evitar conflictos con el grid */
+    animation: fadeIn 0.5s ease backwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  img {
+    pointer-events: none;
+  }
+</style>
